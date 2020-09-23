@@ -4,9 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tflite/tflite.dart';
 
-const tfLiteModelPath = "assets/model_unquant.tflite";
+const tfLiteModelPath = "assets/model.tflite";
 const tfLiteLabelPath = "assets/labels.txt";
 const flowerImageAssetPath = "assets/flower.jpg";
+/// 5 types of flowers.
+const classCount = 5;
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key}) : super(key: key);
@@ -42,7 +44,8 @@ class _HomePageState extends State<HomePage> {
     });
     final output = await Tflite.runModelOnImage(
       path: image.path,
-      numResults: 2, // 2 categories, Cat or Dog
+      // ignore: avoid_redundant_argument_values
+      numResults: classCount,
       threshold: 0.5,
       imageMean: 127.5,
       imageStd: 127.5,
@@ -107,7 +110,7 @@ class _HomePageState extends State<HomePage> {
                     const SizedBox(height: 20),
                     if (_output != null)
                       Text(
-                        "${_output[0]['label']}".substring(2),
+                        "${_output[0]['label']}".toUpperCase(),
                         style: Theme.of(context).textTheme.headline3,
                       )
                   ],
